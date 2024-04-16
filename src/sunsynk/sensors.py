@@ -65,6 +65,11 @@ class Sensor:
 
 
 @attrs.define(slots=True, eq=False)
+class TextSensor(Sensor):
+    """Text/non-numeric sensors are discovered differently."""
+
+
+@attrs.define(slots=True, eq=False)
 class BinarySensor(Sensor):
     """Binary sensor."""
 
@@ -156,7 +161,7 @@ class TempSensor(Sensor):
 
 
 @attrs.define(slots=True, eq=False)
-class SDStatusSensor(Sensor):
+class SDStatusSensor(TextSensor):
     """SD card status."""
 
     def reg_to_value(self, regs: RegType) -> ValType:
@@ -168,7 +173,7 @@ class SDStatusSensor(Sensor):
 
 
 @attrs.define(slots=True, eq=False)
-class InverterStateSensor(Sensor):
+class InverterStateSensor(TextSensor):
     """Inverter status."""
 
     def reg_to_value(self, regs: RegType) -> ValType:
@@ -192,7 +197,7 @@ class SerialSensor(Sensor):
 
 
 @attrs.define(slots=True, eq=False)
-class EnumSensor(Sensor):
+class EnumSensor(TextSensor):
     """Sensor with a set of enum values. Like a read-only SelectRWSensor"""
 
     options: dict[int, str] = attrs.field(factory=dict)
@@ -211,7 +216,7 @@ class EnumSensor(Sensor):
 
 
 @attrs.define(slots=True, eq=False)
-class FaultSensor(Sensor):
+class FaultSensor(TextSensor):
     """Decode Inverter faults."""
 
     def reg_to_value(self, regs: RegType) -> ValType:
@@ -244,7 +249,7 @@ class FaultSensor(Sensor):
 
 
 @attrs.define(slots=True, eq=False)
-class HVFaultSensor(Sensor):
+class HVFaultSensor(TextSensor):
     """Decode HV Inverter faults."""
 
     def reg_to_value(self, regs: RegType) -> ValType:
